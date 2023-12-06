@@ -1,0 +1,69 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:14
+    container_name: postgres
+    networks:
+      - publisher-network
+    ports:
+      - "5435:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    env_file:
+      - environment/environment_postgres.env
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  publisher-initdb:
+    image: syntioinc/dataphos-publisher-initdb:v1.1.0
+    container_name: publisher-initdb
+    restart: on-failure
+    networks:
+      - publisher-network
+    depends_on:
+      postgres:
+        condition: service_healthy
+    env_file:
+      - environment/environment_metadata.env
+
+  publisher-manager:
+    image: syntioinc/dataphos-publisher-manager:v1.1.0
+    container_name: publisher-manager
+    depends_on:
+      - publisher-initdb
+    ports:
+      - "8080:8080"
+    restart: on-failure
+    networks:
+      - publisher-network
+    env_file:
+      - environment/environment_manager.env
+      - environment/environment_metadata.env
+
+  publisher-avro-schema-generator:
+    image: hub.syntio.xyz/archer/avro-schema-generator:v0.1.1
+    container_name: publisher-avro-schema-generator
+    networks:
+      - publisher-network
+
+  publisher-data-fetcher:
+    image: hub.syntio.xyz/archer/data-fetcher:v1.0.0
+    container_name: publisher-data-fetcher
+    env_file:
+      - environment/environment_fetcher.env
+    depends_on:
+      - publisher-manager
+    networks:
+      - publisher-network
+
+networks:
+   publisher-network:
+    name: publisher_net
+
+volumes:
+  postgres_data:
+    driver: local
