@@ -1,9 +1,9 @@
 version: "3.9"
 
 services:
-  postgres:
+  metadata-db:
     image: postgres:14
-    container_name: postgres
+    container_name: metadata-db
     networks:
       - publisher-network
     ports:
@@ -16,7 +16,7 @@ services:
     env_file:
       - environment/environment_postgres.env
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - metadata_db_data:/var/lib/postgresql/data
 
   publisher-initdb:
     image: syntioinc/dataphos-publisher-initdb:v1.1.0
@@ -25,7 +25,7 @@ services:
     networks:
       - publisher-network
     depends_on:
-      postgres:
+      metadata-db:
         condition: service_healthy
     env_file:
       - environment/environment_metadata.env
@@ -45,13 +45,13 @@ services:
       - environment/environment_metadata.env
 
   publisher-avro-schema-generator:
-    image: hub.syntio.xyz/archer/avro-schema-generator:v0.1.1
+    image: syntioinc/dataphos-publisher-avro-schema-generator:v1.0.0
     container_name: publisher-avro-schema-generator
     networks:
       - publisher-network
 
   publisher-data-fetcher:
-    image: hub.syntio.xyz/archer/data-fetcher:v1.0.0
+    image: syntioinc/dataphos-publisher-data-fetcher:v1.0.0
     container_name: publisher-data-fetcher
     env_file:
       - environment/environment_fetcher.env
@@ -65,5 +65,5 @@ networks:
     name: publisher_net
 
 volumes:
-  postgres_data:
+  metadata_db_data:
     driver: local

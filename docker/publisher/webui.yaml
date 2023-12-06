@@ -2,12 +2,12 @@ version: "3.9"
 
 services:
   publisher-webui:
-    image: hub.syntio.xyz/archer/webui:v1.0.0
+    image: syntioinc/dataphos-publisher-webui:v1.0.0
     container_name: webui
     ports:
       - "8085:8080"
     volumes:
-      - C:\Users\AndreaBarbaric\OneDrive - Syntio\Desktop\archer_docker\config.js:/usr/share/nginx/html/config.js
+      - ./configuration/webui-config.js:/usr/share/nginx/html/config.js
     env_file:
       - environment/environment_metadata.env
       - environment/environment_manager.env

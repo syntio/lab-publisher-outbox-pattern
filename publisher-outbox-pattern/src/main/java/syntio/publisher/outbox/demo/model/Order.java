@@ -1,15 +1,13 @@
-package com.example.demo.model;
+package syntio.publisher.outbox.demo.model;
 
-import java.sql.Date;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
-
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.type.descriptor.jdbc.TimestampWithTimeZoneJdbcType;
-
-import jakarta.persistence.*; // for Spring Boot 3
-// import javax.persistence.*; // for Spring Boot 2
 
 @Entity
 @Table(name = "orders")
@@ -29,10 +27,10 @@ public class Order {
 	private String product;
 
 	@Column(name = "created_at")
-	private String created_at;
+	private Timestamp createdAt;
 
 	@Column(name = "order_id")
-	private Integer order_id;
+	private Integer orderId;
 
 	@Column(name = "producer")
 	private String producer;
@@ -47,12 +45,13 @@ public class Order {
 
 	}
 
-	public Order(String purchaser, Integer quantity, String product, String created_at, Integer order_id, String producer, String country, String email) {
+	public Order(String purchaser, Integer quantity, String product, Timestamp createdAt, Integer orderId,
+				 String producer, String country, String email) {
 		this.purchaser = purchaser;
 		this.quantity = quantity;
 		this.product = product;
-		this.created_at = created_at;
-		this.order_id = order_id;
+		this.createdAt = createdAt;
+		this.orderId = orderId;
 		this.producer = producer;
 		this.country = country;
 		this.email = email;
@@ -86,20 +85,20 @@ public class Order {
 		this.product = product;
 	}
 
-	public String getCreated_at() {
-		return created_at;
+	public Timestamp getCreatedAt() {
+		return createdAt;
 	}
 
-	public void setCreated_at(String created_at) {
-		this.created_at = created_at;
+	public void setCreatedAt(Timestamp createdAt) {
+		this.createdAt = createdAt;
 	}
 
 	public Integer getOrderId() {
-		return order_id;
+		return orderId;
 	}
 
-	public void setOrderId(Integer order_id) {
-		this.order_id = order_id;
+	public void setOrderId(Integer orderId) {
+		this.orderId = orderId;
 	}
 
 	public String getProducer() {
@@ -131,7 +130,7 @@ public class Order {
 	@Override
 	public String toString() {
 		return "Order [id=" + id + ", purchaser=" + purchaser + ", quantity=" + quantity + ", product=" + product
-				+ ", created_at=" + created_at + ", order_id=" + order_id + ", producer=" + producer + ", country="
+				+ ", created_at=" + createdAt + ", order_id=" + orderId + ", producer=" + producer + ", country="
 				+ country + ", email=" + email + "]";
 	}
 

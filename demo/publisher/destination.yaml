@@ -1,0 +1,8 @@
+destinationName: publisher-kafka-destination
+destinationType: Kafka
+parameters:
+  BrokerAddr: kafka:9092
+  TopicID: orders
+  TLS: false
+  VerifyServerCertificate: false
+  VerifyClientCertificate: false
