@@ -3,7 +3,7 @@ services:
   publisher-worker:
     image: syntioinc/dataphos-publisher-worker:v1.1.0
     container_name: publisher-orders
-    command: ["publisher-orders"]
+    command: ["publisher-orders-new9"]
     networks:
       - publisher-network
     env_file:
