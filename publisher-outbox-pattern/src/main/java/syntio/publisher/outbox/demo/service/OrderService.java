@@ -5,8 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import jakarta.transaction.Transactional;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalField;
 import java.util.List;
 import java.util.Map;
 import syntio.publisher.outbox.demo.model.Order;
@@ -22,6 +24,22 @@ public class OrderService {
 
     @Autowired
     private OrderLinesRepository orderLinesRepository;
+
+    private final Timestamp unsetTimestamp = Timestamp.valueOf("1000-01-01 00:00:00.0");
+
+    public void createOrder(Order order) {
+        Timestamp currentTimestamp = Timestamp.valueOf(LocalDateTime.now());
+        order.setCreatedAt(currentTimestamp);
+        order.setUpdatedAt(unsetTimestamp);
+        order.setDeletedAt(unsetTimestamp);
+        List<OrderLines> orderLines = order.getOrderLines();
+        orderLines.forEach(orderLine -> {
+            orderLine.setCreatedAt(OffsetDateTime.now());
+            orderLine.setDeletedAt(unsetTimestamp);
+            orderLine.setUpdatedAt(unsetTimestamp);
+        });
+        orderRepository.save(order);
+    }
 
     public void createOrder(String purchaser, String paymentMethod, OffsetDateTime createdAt, boolean isActive, List<Map<String, Object>> orderItems) {
 

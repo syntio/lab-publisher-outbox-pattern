@@ -15,48 +15,48 @@ import java.time.OffsetDateTime;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-@Table(name = "order lines")
+@Table(name = "order_lines")
 public class OrderLines {
     @Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
-	@Column(name = "product")
-	private String product;
+    @Column(name = "product")
+    private String product;
 
-	@Column(name = "quantity")
-	private Integer quantity;
+    @Column(name = "quantity")
+    private Integer quantity;
 
-	@Column(name = "price")
-	private double price;
+    @Column(name = "price")
+    private double price;
 
-	@Column(name = "created_at")
-	private OffsetDateTime createdAt;
+    @Column(name = "created_at")
+    private OffsetDateTime createdAt;
 
-	@Column(name = "updated_at")
-	private Timestamp updatedAt;
+    @Column(name = "updated_at")
+    private Timestamp updatedAt;
 
-	@Column(name = "deleted_at")
-	private Timestamp deletedAt;
+    @Column(name = "deleted_at")
+    private Timestamp deletedAt;
 
-	@Column(name = "is_active")
-	private Boolean isActive;
+    @Column(name = "is_active")
+    private Boolean isActive;
 
-	@ManyToOne
+    @ManyToOne
     @JsonIgnore
     @JoinColumn(name = "order_id", referencedColumnName = "id")
     private Order order;
 
-	public OrderLines() {
+    public OrderLines() {
 
-	}
+    }
 
-	 public OrderLines(Order order, String product, Integer quantity, double price) {
+    public OrderLines(Order order, String product, Integer quantity, double price) {
         this.order = order;
-		this.product = product;
-		this.quantity = quantity;
-		this.price = price;
-	} 
+        this.product = product;
+        this.quantity = quantity;
+        this.price = price;
+    }
 
     public Order getOrder() {
         return order;
@@ -66,72 +66,72 @@ public class OrderLines {
         this.order = order;
     }
 
-	public long getId() {
-		return id;
-	}
-
-	public String getProduct() {
-		return product;
-	}
-
-	public void setProduct(String product) {
-		this.product = product;
-	}
-
-	public Integer getQuantity() {
-		return quantity;
-	}
-
-	public void setQuantity(Integer quantity) {
-		this.quantity = quantity;
-	}
-
-    public double getPrice() {
-		return price;
-	}
-
-	public void setPrice(double price) {
-		this.price = price;
+    public long getId() {
+        return id;
     }
 
-	public OffsetDateTime getCreatedAt() {
-		return createdAt;
-	}
+    public String getProduct() {
+        return product;
+    }
 
-	public void setCreatedAt(OffsetDateTime createdAt) {
-		this.createdAt = createdAt;
-	}
+    public void setProduct(String product) {
+        this.product = product;
+    }
 
-	public Timestamp getUpdatedAt() {
-		return updatedAt;
-	}
+    public Integer getQuantity() {
+        return quantity;
+    }
 
-	public void setUpdatedAt(Timestamp updatedAt) {
-		this.updatedAt = updatedAt;
-	}
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
 
-	public Timestamp getDeletedAt() {
-		return deletedAt;
-	}
+    public double getPrice() {
+        return price;
+    }
 
-	public void setDeletedAt(Timestamp deletedAt) {
-		this.deletedAt = deletedAt;
-	}
+    public void setPrice(double price) {
+        this.price = price;
+    }
 
-	public Boolean getIsActive() {
-		return isActive;
-	}
+    public OffsetDateTime getCreatedAt() {
+        return createdAt;
+    }
 
-	public void setIsActive(Boolean isActive) {
-		this.isActive = isActive;
-	}
-	
+    public void setCreatedAt(OffsetDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
 
-	@Override
-	public String toString() {
-		return "OrderLines [id=" + id + ", product=" + product + ", quantity=" + quantity + ", price=" + price
-		+ ", created_at=" + createdAt + ", updated_at=" + updatedAt + ", deleted_at=" + deletedAt
-		+ ", is_active=" + isActive + "]";
-	}
-    
+    public Timestamp getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Timestamp updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public Timestamp getDeletedAt() {
+        return deletedAt;
+    }
+
+    public void setDeletedAt(Timestamp deletedAt) {
+        this.deletedAt = deletedAt;
+    }
+
+    public Boolean getIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(Boolean isActive) {
+        this.isActive = isActive;
+    }
+
+
+    @Override
+    public String toString() {
+        return "OrderLines [id=" + id + ", product=" + product + ", quantity=" + quantity + ", price=" + price
+                + ", created_at=" + createdAt + ", updated_at=" + updatedAt + ", deleted_at=" + deletedAt
+                + ", is_active=" + isActive + "]";
+    }
+
 }

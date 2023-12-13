@@ -8,12 +8,16 @@ import java.time.format.DateTimeFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
+import syntio.publisher.outbox.demo.model.Order;
+import syntio.publisher.outbox.demo.model.OrderLines;
 import syntio.publisher.outbox.demo.repository.OrderRepository;
 import syntio.publisher.outbox.demo.service.OrderService;
 import syntio.publisher.outbox.demo.repository.OrderLinesRepository;
@@ -53,6 +57,7 @@ public class OrderController {
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     } */
 
+    /*
     @PostMapping("/orders")
     public ResponseEntity<String> createOrder(@RequestBody Map<String, Object> requestData) {
         String purchaser = (String) requestData.get("purchaser");
@@ -71,24 +76,19 @@ public class OrderController {
         orderService.createOrder(purchaser, paymentMethod, createdAt, isActive, orderLines);
 
         return ResponseEntity.ok("Order processed successfully");
-    }
+    }*/
 
 
-    /* @PostMapping("/orders")
+    @PostMapping("/orders")
     public ResponseEntity<Order> createOrder(@RequestBody Order order) {
         try {
-            Order _order = orderRepository
-                    .save(new Order(order.getPurchaser(), order.getPaymentMethod(),
-                            order.getCreatedAt(), order.getUpdatedAt(), order.getDeletedAt(),
-                            order.getIsActive(), order.getOrderLines()));
-            orderLinesRepository.save(order.getOrderLines());
-            
-            LOG.info("Created order: {}", _order);
-            return new ResponseEntity<>(_order, HttpStatus.CREATED);
+            orderService.createOrder(order);
+            LOG.info("Created order: {}", order);
+            return new ResponseEntity<>(order, HttpStatus.CREATED);
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }
-    } */
+    }
 
     /* @PutMapping("/orders/{id}")
     public ResponseEntity<Order> updateOrder(@PathVariable("id") Integer id, @RequestBody Order order) {
