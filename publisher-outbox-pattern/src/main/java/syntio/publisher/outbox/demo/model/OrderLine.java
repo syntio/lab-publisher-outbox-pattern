@@ -1,22 +1,13 @@
 package syntio.publisher.outbox.demo.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-
-import java.sql.Timestamp;
-import java.time.OffsetDateTime;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
+
+import java.time.OffsetDateTime;
 
 @Entity
 @Table(name = "order_lines")
-public class OrderLines {
+public class OrderLine {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -34,10 +25,10 @@ public class OrderLines {
     private OffsetDateTime createdAt;
 
     @Column(name = "updated_at")
-    private Timestamp updatedAt;
+    private OffsetDateTime updatedAt;
 
     @Column(name = "deleted_at")
-    private Timestamp deletedAt;
+    private OffsetDateTime deletedAt;
 
     @Column(name = "is_active")
     private Boolean isActive;
@@ -47,11 +38,11 @@ public class OrderLines {
     @JoinColumn(name = "order_id", referencedColumnName = "id")
     private Order order;
 
-    public OrderLines() {
+    public OrderLine() {
 
     }
 
-    public OrderLines(Order order, String product, Integer quantity, double price) {
+    public OrderLine(Order order, String product, Integer quantity, double price) {
         this.order = order;
         this.product = product;
         this.quantity = quantity;
@@ -102,19 +93,19 @@ public class OrderLines {
         this.createdAt = createdAt;
     }
 
-    public Timestamp getUpdatedAt() {
+    public OffsetDateTime getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(Timestamp updatedAt) {
+    public void setUpdatedAt(OffsetDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
 
-    public Timestamp getDeletedAt() {
+    public OffsetDateTime getDeletedAt() {
         return deletedAt;
     }
 
-    public void setDeletedAt(Timestamp deletedAt) {
+    public void setDeletedAt(OffsetDateTime deletedAt) {
         this.deletedAt = deletedAt;
     }
 

@@ -1,18 +1,9 @@
 package syntio.publisher.outbox.demo.model;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
+import java.time.OffsetDateTime;
 import java.util.List;
-
-import java.sql.Timestamp;
 
 
 @Entity
@@ -20,6 +11,7 @@ import java.sql.Timestamp;
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
     private Integer id;
 
     @Column(name = "purchaser")
@@ -29,26 +21,26 @@ public class Order {
     private String paymentMethod;
 
     @Column(name = "created_at")
-    private Timestamp createdAt;
+    private OffsetDateTime createdAt;
 
     @Column(name = "updated_at")
-    private Timestamp updatedAt;
+    private OffsetDateTime updatedAt;
 
     @Column(name = "deleted_at")
-    private Timestamp deletedAt;
+    private OffsetDateTime deletedAt;
 
     @Column(name = "is_active")
     private Boolean isActive;
 
     @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<OrderLines> orderLines;
+    private List<OrderLine> orderLines;
 
 
     public Order() {
 
     }
 
-    public Order(String purchaser, String paymentMethod, Timestamp createdAt, Timestamp updatedAt, Timestamp deletedAt, Boolean isActive, List<OrderLines> orderLines) {
+    public Order(String purchaser, String paymentMethod, OffsetDateTime createdAt, OffsetDateTime updatedAt, OffsetDateTime deletedAt, Boolean isActive, List<OrderLine> orderLines) {
         this.purchaser = purchaser;
         this.paymentMethod = paymentMethod;
         this.createdAt = createdAt;
@@ -58,11 +50,11 @@ public class Order {
         this.orderLines = orderLines;
     }
 
-    public List<OrderLines> getOrderLines() {
+    public List<OrderLine> getOrderLines() {
         return orderLines;
     }
 
-    public void setOrderLines(List<OrderLines> orderLines) {
+    public void setOrderLines(List<OrderLine> orderLines) {
         this.orderLines = orderLines;
     }
 
@@ -90,27 +82,27 @@ public class Order {
         this.paymentMethod = paymentMethod;
     }
 
-    public Timestamp getCreatedAt() {
+    public OffsetDateTime getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Timestamp createdAt) {
+    public void setCreatedAt(OffsetDateTime createdAt) {
         this.createdAt = createdAt;
     }
 
-    public Timestamp getUpdatedAt() {
+    public OffsetDateTime getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(Timestamp updatedAt) {
+    public void setUpdatedAt(OffsetDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
 
-    public Timestamp getDeletedAt() {
+    public OffsetDateTime getDeletedAt() {
         return deletedAt;
     }
 
-    public void setDeletedAt(Timestamp deletedAt) {
+    public void setDeletedAt(OffsetDateTime deletedAt) {
         this.deletedAt = deletedAt;
     }
 
