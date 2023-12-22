@@ -2,15 +2,18 @@ package syntio.publisher.outbox.demo.service;
 
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 import syntio.publisher.outbox.demo.model.Order;
 import syntio.publisher.outbox.demo.model.OrderLine;
-import syntio.publisher.outbox.demo.repository.OrderLinesRepository;
+import syntio.publisher.outbox.demo.repository.OrderLineRepository;
 import syntio.publisher.outbox.demo.repository.OrderRepository;
 
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,20 +24,24 @@ public class OrderService {
     private OrderRepository orderRepository;
 
     @Autowired
-    private OrderLinesRepository orderLinesRepository;
-
-    private final Timestamp unsetTimestamp = Timestamp.valueOf("1000-01-01 00:00:00.0");
+    private OrderLineRepository orderLineRepository;
 
     public void createOrder(Order order) {
-        Timestamp currentTimestamp = Timestamp.valueOf(LocalDateTime.now());
+        // Get the current date and time in UTC
+        OffsetDateTime now = OffsetDateTime.now(ZoneOffset.UTC);
+        // Format the timestamp as a string
+        String formattedTimestamp = now.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+        System.out.println("Formatted Timestamp (UTC): " + formattedTimestamp);
+        // Extract timezone offset in the format ±HH:mm
+        String timezoneOffset = now.getOffset().toString();
 
-        order.setCreatedAt(OffsetDateTime.now());
+        order.setCreatedAt(now);
         order.setUpdatedAt(null);
         order.setDeletedAt(null);
         order.setIsActive(true);
         List<OrderLine> orderLines = order.getOrderLines();
         orderLines.forEach(orderLine -> {
-            orderLine.setCreatedAt(OffsetDateTime.now());
+            orderLine.setCreatedAt(now);
             orderLine.setDeletedAt(null);
             orderLine.setUpdatedAt(null);
             orderLine.setIsActive(true);
@@ -43,28 +50,41 @@ public class OrderService {
         orderRepository.save(order);
     }
 
-    public void updateOrder(Order updatedOrder) {
-        Timestamp currentTimestamp = Timestamp.valueOf(LocalDateTime.now());
-        Optional<Order> existingOrder = orderRepository.findById(updatedOrder.getOrderId());
+    public ResponseEntity<Order> updateOrder(@PathVariable("orderId") Integer id, Order updatedOrder) {
+        // Get the current date and time in UTC
+        OffsetDateTime now = OffsetDateTime.now(ZoneOffset.UTC);
+        // Format the timestamp as a string
+        String formattedTimestamp = now.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+        System.out.println("Formatted Timestamp (UTC): " + formattedTimestamp);
+        // Extract timezone offset in the format ±HH:mm
+        String timezoneOffset = now.getOffset().toString();
 
-        if (existingOrder.isPresent()) {
-            Order order = existingOrder.get();
-            order.setUpdatedAt(OffsetDateTime.now());
-            List<OrderLine> updatedOrderLines = updatedOrder.getOrderLines();
-            List<OrderLine> existingOrderLines = order.getOrderLines();
+        Order existingOrderOptional = orderRepository.findById(id).orElse(null);
 
-            existingOrderLines.removeIf(orderLine -> !updatedOrderLines.contains(orderLine));
-            for (OrderLine orderLine : updatedOrderLines) {
-                orderLine.setOrder(order);
-                int index = existingOrderLines.indexOf(orderLine);
-                if (index != -1) {
-                    existingOrderLines.set(index, orderLine);
-                } else {
-                    existingOrderLines.add(orderLine);
-                }
-            }
-            orderRepository.save(order);
+        if (existingOrderOptional == null) {
+            return ResponseEntity.notFound().build();
         }
+
+        existingOrderOptional.setUpdatedAt(now);
+        existingOrderOptional.setPurchaser(updatedOrder.getPurchaser());
+        existingOrderOptional.setPaymentMethod(updatedOrder.getPaymentMethod());
+
+        List<OrderLine> updatedOrderLines = new ArrayList<>();
+        for (OrderLine lineUpdateRequest : updatedOrder.getOrderLines()) {
+            OrderLine existingLine = orderLineRepository.findOrderLineById(lineUpdateRequest.getId());
+            if (existingLine != null) {
+                existingLine.setProduct(lineUpdateRequest.getProduct());
+                existingLine.setQuantity(lineUpdateRequest.getQuantity());
+                existingLine.setPrice(lineUpdateRequest.getPrice());
+                existingLine.setUpdatedAt(now);
+                updatedOrderLines.add(existingLine);
+            }
+        }
+
+        existingOrderOptional.setOrderLines(updatedOrderLines);
+        Order newOrder = orderRepository.save(existingOrderOptional);
+        return ResponseEntity.ok(newOrder);
+
     }
 
     public void deleteById(Integer id) {
@@ -80,45 +100,5 @@ public class OrderService {
             orderRepository.save(existingOrder);
         }
     }
-
-
-   /* public void createOrder(String purchaser, String paymentMethod, OffsetDateTime createdAt, boolean isActive, List<Map<String, Object>> orderItems) {
-
-        // Create Order
-        Order order = new Order();
-        order.setPurchaser(purchaser);
-        order.setPaymentMethod(paymentMethod);
-        //order.setCreatedAt(Timestamp.from(createdAt.toInstant()));
-        //order.setUpdatedAt(updatedAt);
-        //order.setDeletedAt(deletedAt);
-        order.setIsActive(isActive);
-
-        // Format the OffsetDateTime with the desired format including UTC offset
-        //String formattedTimestamp = createdAt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSZ"));
-        //order.setCreatedAt(Timestamp.from(createdAt.toInstant()));
-
-        orderRepository.save(order);
-
-        // Create Order Lines
-        for (Map<String, Object> orderLineData : orderItems) {
-            OrderLine orderLines = new OrderLine();
-            orderLines.setProduct((String) orderLineData.get("product"));
-            orderLines.setQuantity((Integer) orderLineData.get("quantity"));
-            orderLines.setPrice((double) orderLineData.get("price"));
-            orderLines.setIsActive(isActive);
-            orderLines.setCreatedAt(createdAt);
-            orderLines.setOrder(order);
-            orderLinesRepository.save(orderLines);
-        }
-
-         order.setOrderLines(orderLinesList);
-        for (OrderLines orderItems : orderLinesList) {
-            OrderLines orderLines = new OrderLines();
-            orderLines.setProduct(orderItems.getProduct());
-            orderLines.setQuantity(orderItems.getQuantity());
-            orderLines.setPrice(orderItems.getPrice());
-            orderLines.setOrder(order);
-            orderLinesRepository.save(orderLines);
-        } */
 
 }

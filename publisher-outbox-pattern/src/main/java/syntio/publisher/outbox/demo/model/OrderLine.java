@@ -57,7 +57,7 @@ public class OrderLine {
         this.order = order;
     }
 
-    public long getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -120,9 +120,7 @@ public class OrderLine {
 
     @Override
     public String toString() {
-        return "OrderLines [id=" + id + ", product=" + product + ", quantity=" + quantity + ", price=" + price
-                + ", created_at=" + createdAt + ", updated_at=" + updatedAt + ", deleted_at=" + deletedAt
-                + ", is_active=" + isActive + "]";
+        return "OrderLines [id=" + id + ", product=" + product + ", quantity=" + quantity + ", price=" + price + ", created_at=" + createdAt + ", updated_at=" + updatedAt + ", deleted_at=" + deletedAt + ", is_active=" + isActive + "]";
     }
 
 }

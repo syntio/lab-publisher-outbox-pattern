@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import syntio.publisher.outbox.demo.model.Order;
-import syntio.publisher.outbox.demo.repository.OrderLinesRepository;
+import syntio.publisher.outbox.demo.repository.OrderLineRepository;
 import syntio.publisher.outbox.demo.repository.OrderRepository;
 import syntio.publisher.outbox.demo.service.OrderService;
 
@@ -22,11 +22,11 @@ import java.util.Optional;
 public class OrderController {
     private static final Logger LOG = LoggerFactory.getLogger(OrderController.class);
     @Autowired
-    private OrderService orderService;
-    @Autowired
     OrderRepository orderRepository;
     @Autowired
-    OrderLinesRepository orderLinesRepository;
+    OrderLineRepository orderLineRepository;
+    @Autowired
+    private OrderService orderService;
 
     @PostMapping("/orders")
     public ResponseEntity<Order> createOrder(@RequestBody Order order) {
@@ -61,10 +61,10 @@ public class OrderController {
         }
     }
 
-    @PutMapping("/orders/{id}")
-    public ResponseEntity<Order> updateOrder(@PathVariable Integer id, @RequestBody Order order) {
+    @PutMapping("/orders/{orderId}")
+    public ResponseEntity<Order> updateOrder(@PathVariable Integer orderId, @RequestBody Order order) {
         try {
-            orderService.updateOrder(order);
+            orderService.updateOrder(orderId, order);
             LOG.info("Updated order: {}", order);
             return new ResponseEntity<>(order, HttpStatus.OK);
         } catch (Exception e) {
@@ -92,28 +92,5 @@ public class OrderController {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }
     }
-
-
-    /*
-    @PostMapping("/orders")
-    public ResponseEntity<String> createOrder(@RequestBody Map<String, Object> requestData) {
-        String purchaser = (String) requestData.get("purchaser");
-        String paymentMethod = (String) requestData.get("paymentMethod");
-        String timestampString = (String) requestData.get("createdAt");
-        // Timestamp updatedAt = Timestamp.valueOf((String)requestData.get("updatedAt"));
-        // Timestamp deletedAt = Timestamp.valueOf((String)requestData.get("deletedAt"));
-        Boolean isActive = (Boolean) requestData.get("isActive");
-
-        // Parse the timestamp string to OffsetDateTime using a custom format
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX");
-        OffsetDateTime createdAt = OffsetDateTime.parse(timestampString, formatter);
-
-        List<Map<String, Object>> orderLines = (List<Map<String, Object>>) requestData.get("orderLines");
-
-        orderService.createOrder(purchaser, paymentMethod, createdAt, isActive, orderLines);
-
-        return ResponseEntity.ok("Order processed successfully");
-    }*/
-
 
 }

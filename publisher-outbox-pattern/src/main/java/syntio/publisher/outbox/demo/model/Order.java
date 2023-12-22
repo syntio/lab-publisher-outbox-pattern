@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import java.time.OffsetDateTime;
 import java.util.List;
 
-
 @Entity
 @Table(name = "orders")
 public class Order {
@@ -117,9 +116,7 @@ public class Order {
 
     @Override
     public String toString() {
-        return "Order [id=" + id + ", purchaser=" + purchaser + ", payment_method=" + paymentMethod
-                + ", created_at=" + createdAt + ", updated_at=" + updatedAt + ", deleted_at=" + deletedAt
-                + ", is_active=" + isActive + "]";
+        return "Order [id=" + id + ", purchaser=" + purchaser + ", payment_method=" + paymentMethod + ", created_at=" + createdAt + ", updated_at=" + updatedAt + ", deleted_at=" + deletedAt + ", is_active=" + isActive + "]";
     }
 
 }
