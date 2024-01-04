@@ -6,7 +6,11 @@ import java.time.OffsetDateTime;
 import java.util.List;
 
 @Entity
-@Table(name = "orders")
+@Table(name = "orders", indexes = {
+        @Index(name = "idx_created_at", columnList = "created_at"),
+        @Index(name = "idx_updated_at", columnList = "updated_at"),
+        @Index(name = "idx_deleted_at", columnList = "deleted_at")
+})
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

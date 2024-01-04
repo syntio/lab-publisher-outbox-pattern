@@ -34,14 +34,18 @@ public class OrderService {
         System.out.println("Formatted Timestamp (UTC): " + formattedTimestamp);
         // Extract timezone offset in the format ±HH:mm
         String timezoneOffset = now.getOffset().toString();
+        // Adjust the offset to be one hour earlier
+        OffsetDateTime adjustedTime = now.minusHours(1);
+        // Format the adjusted timestamp as a string
+        String adjustedTimestamp = adjustedTime.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
 
-        order.setCreatedAt(now);
+        order.setCreatedAt(adjustedTime);
         order.setUpdatedAt(null);
         order.setDeletedAt(null);
         order.setIsActive(true);
         List<OrderLine> orderLines = order.getOrderLines();
         orderLines.forEach(orderLine -> {
-            orderLine.setCreatedAt(now);
+            orderLine.setCreatedAt(adjustedTime);
             orderLine.setDeletedAt(null);
             orderLine.setUpdatedAt(null);
             orderLine.setIsActive(true);
@@ -58,6 +62,10 @@ public class OrderService {
         System.out.println("Formatted Timestamp (UTC): " + formattedTimestamp);
         // Extract timezone offset in the format ±HH:mm
         String timezoneOffset = now.getOffset().toString();
+        // Adjust the offset to be one hour earlier
+        OffsetDateTime adjustedTime = now.minusHours(1);
+        // Format the adjusted timestamp as a string
+        String adjustedTimestamp = adjustedTime.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
 
         Order existingOrderOptional = orderRepository.findById(id).orElse(null);
 
@@ -65,7 +73,7 @@ public class OrderService {
             return ResponseEntity.notFound().build();
         }
 
-        existingOrderOptional.setUpdatedAt(now);
+        existingOrderOptional.setUpdatedAt(adjustedTime);
         existingOrderOptional.setPurchaser(updatedOrder.getPurchaser());
         existingOrderOptional.setPaymentMethod(updatedOrder.getPaymentMethod());
 
@@ -76,7 +84,7 @@ public class OrderService {
                 existingLine.setProduct(lineUpdateRequest.getProduct());
                 existingLine.setQuantity(lineUpdateRequest.getQuantity());
                 existingLine.setPrice(lineUpdateRequest.getPrice());
-                existingLine.setUpdatedAt(now);
+                existingLine.setUpdatedAt(adjustedTime);
                 updatedOrderLines.add(existingLine);
             }
         }
@@ -88,13 +96,27 @@ public class OrderService {
     }
 
     public void deleteById(Integer id) {
+        // Get the current date and time in UTC
+        OffsetDateTime now = OffsetDateTime.now(ZoneOffset.UTC);
+        // Format the timestamp as a string
+        String formattedTimestamp = now.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+        System.out.println("Formatted Timestamp (UTC): " + formattedTimestamp);
+        // Extract timezone offset in the format ±HH:mm
+        String timezoneOffset = now.getOffset().toString();
+        // Adjust the offset to be one hour earlier
+        OffsetDateTime adjustedTime = now.minusHours(1);
+        // Format the adjusted timestamp as a string
+        String adjustedTimestamp = adjustedTime.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+
         Optional<Order> order = orderRepository.findById(id);
         if (order.isPresent()) {
             Order existingOrder = order.get();
             existingOrder.setIsActive(false);
+            existingOrder.setDeletedAt(adjustedTime);
             List<OrderLine> orderLines = existingOrder.getOrderLines();
             orderLines.forEach(orderLine -> {
                 orderLine.setIsActive(false);
+                orderLine.setDeletedAt(adjustedTime);
                 orderLine.setOrder(existingOrder);
             });
             orderRepository.save(existingOrder);

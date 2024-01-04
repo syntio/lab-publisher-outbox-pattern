@@ -14,7 +14,7 @@ services:
       - PG_DATA=PG_DATA=/var/lib/postgresql/data/pgdata
       - TZ=Europe/Zagreb
     ports:
-      -  "5433:5432"
+      - "5433:5432"
     volumes:
       - orders-db:/var/lib/postgresql/data
 
@@ -24,5 +24,5 @@ networks:
 
 volumes:
   orders-db:
-   driver: local
+    driver: local
   

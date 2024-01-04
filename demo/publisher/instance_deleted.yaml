@@ -1,4 +1,4 @@
-publisherName: publisher-orders
+publisherName: publisher-orders-3
 sourceName: publisher-postgres-source
 destinationName: publisher-kafka-destination
 serializationType: Json
@@ -17,7 +17,7 @@ businessObject:
   objectGroup: order
   additionalMetadata:
     organization: Syntio
-    eventType: OrderCreated
+    eventType: OrderDeleted
   definition:
     - id
     - order_info:
@@ -38,10 +38,9 @@ businessObject:
     - order_id
   keyElements:
     - id
-    - order_id
   idElements:
     - id
-    - created_at
+    - deleted_at
     - order_id
   query: SELECT orders.id AS id, orders.purchaser AS purchaser,
     orders.payment_method AS payment_method, orders.created_at AS created_at,
@@ -49,5 +48,5 @@ businessObject:
     orders.is_active AS is_active, order_lines.product AS product,
     order_lines.quantity AS quantity, order_lines.price AS price,
     order_lines.order_id AS order_id FROM orders JOIN order_lines ON orders.id =
-    order_lines.order_id WHERE orders.created_at >= {{ .FetchFrom }} AND
-    orders.created_at < {{ .FetchTo }};
+    order_lines.order_id WHERE orders.deleted_at >= {{ .FetchFrom }} AND
+    orders.deleted_at < {{ .FetchTo }};
