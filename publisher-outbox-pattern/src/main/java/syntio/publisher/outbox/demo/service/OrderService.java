@@ -12,7 +12,6 @@ import syntio.publisher.outbox.demo.repository.OrderRepository;
 
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -29,15 +28,8 @@ public class OrderService {
     public void createOrder(Order order) {
         // Get the current date and time in UTC
         OffsetDateTime now = OffsetDateTime.now(ZoneOffset.UTC);
-        // Format the timestamp as a string
-        String formattedTimestamp = now.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
-        System.out.println("Formatted Timestamp (UTC): " + formattedTimestamp);
-        // Extract timezone offset in the format ±HH:mm
-        String timezoneOffset = now.getOffset().toString();
         // Adjust the offset to be one hour earlier
         OffsetDateTime adjustedTime = now.minusHours(1);
-        // Format the adjusted timestamp as a string
-        String adjustedTimestamp = adjustedTime.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
 
         order.setCreatedAt(adjustedTime);
         order.setUpdatedAt(null);
@@ -57,15 +49,8 @@ public class OrderService {
     public ResponseEntity<Order> updateOrder(@PathVariable("orderId") Integer id, Order updatedOrder) {
         // Get the current date and time in UTC
         OffsetDateTime now = OffsetDateTime.now(ZoneOffset.UTC);
-        // Format the timestamp as a string
-        String formattedTimestamp = now.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
-        System.out.println("Formatted Timestamp (UTC): " + formattedTimestamp);
-        // Extract timezone offset in the format ±HH:mm
-        String timezoneOffset = now.getOffset().toString();
         // Adjust the offset to be one hour earlier
         OffsetDateTime adjustedTime = now.minusHours(1);
-        // Format the adjusted timestamp as a string
-        String adjustedTimestamp = adjustedTime.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
 
         Order existingOrderOptional = orderRepository.findById(id).orElse(null);
 
@@ -98,15 +83,8 @@ public class OrderService {
     public void deleteById(Integer id) {
         // Get the current date and time in UTC
         OffsetDateTime now = OffsetDateTime.now(ZoneOffset.UTC);
-        // Format the timestamp as a string
-        String formattedTimestamp = now.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
-        System.out.println("Formatted Timestamp (UTC): " + formattedTimestamp);
-        // Extract timezone offset in the format ±HH:mm
-        String timezoneOffset = now.getOffset().toString();
         // Adjust the offset to be one hour earlier
         OffsetDateTime adjustedTime = now.minusHours(1);
-        // Format the adjusted timestamp as a string
-        String adjustedTimestamp = adjustedTime.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
 
         Optional<Order> order = orderRepository.findById(id);
         if (order.isPresent()) {

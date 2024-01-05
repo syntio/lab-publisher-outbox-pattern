@@ -1,4 +1,4 @@
-publisherName: publisher-orders-2
+publisherName: publisher-orders-updated
 sourceName: publisher-postgres-source
 destinationName: publisher-kafka-destination
 serializationType: Json

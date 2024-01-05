@@ -1,0 +1,16 @@
+version: "3.9"
+services:
+  publisher-worker:
+    image: syntioinc/dataphos-publisher-worker:v1.1.0
+    container_name: publisher-orders
+    command: [ "publisher-orders-created" ]
+    networks:
+      - publisher-network
+    env_file:
+      - environment/environment_worker.env
+      - environment/environment_metadata.env
+      - environment/environment_manager.env
+
+networks:
+  publisher-network:
+    name: publisher_net

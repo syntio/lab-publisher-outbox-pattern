@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import syntio.publisher.outbox.demo.model.Order;
-import syntio.publisher.outbox.demo.repository.OrderLineRepository;
 import syntio.publisher.outbox.demo.repository.OrderRepository;
 import syntio.publisher.outbox.demo.service.OrderService;
 
@@ -23,8 +22,6 @@ public class OrderController {
     private static final Logger LOG = LoggerFactory.getLogger(OrderController.class);
     @Autowired
     OrderRepository orderRepository;
-    @Autowired
-    OrderLineRepository orderLineRepository;
     @Autowired
     private OrderService orderService;
 

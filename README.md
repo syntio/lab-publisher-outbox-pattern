@@ -35,7 +35,8 @@ were executed on the source database.
   and `docker-compose -f webui.yaml up -d`.
   Source, destination and instances can now be added using WebUI which can be accessed on [http://localhost:8085]().
   Needed .yaml files are located in demo &rarr; publisher folder.
-- After the instances are added, run `docker-compose -f worker.yaml up` to start the Worker component.
+- After the instances are added, run `docker-compose -f <name of the worker.yaml file> up` to start the Worker
+  component.
 
 Now the Orders can be created via Postman POST requests.  
 Creating an Order - example of a message body in POST request to [http://localhost:8089/api/orders]():
@@ -83,7 +84,8 @@ Updating an Order - example of a message body in PUT request to [http://localhos
 }
 ```
 
-When deleting an order, the row isn't actually removed from the database, column 'is_active' is just switched to _false_.
+When deleting an order, the row isn't actually removed from the database, column 'is_active' is just switched to _false_
+.
 
 Publisher should fetch the data from the database and send it to the defined Kafka topic in the right order. To be able
 to visually track the messages, you can reach the Redpanda Console Kafka UI, available on [http://localhost:8082]().
