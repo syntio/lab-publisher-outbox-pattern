@@ -1,0 +1,22 @@
+version: "3.9"
+
+services:
+  publisher-webui:
+    image: syntioinc/dataphos-publisher-webui:v1.0.0
+    container_name: webui
+    ports:
+      - "8085:8080"
+    volumes:
+      - ./configuration/webui-config.js:/usr/share/nginx/html/config.js
+    env_file:
+      - environment/environment_metadata.env
+      - environment/environment_manager.env
+      - environment/environment_postgres.env
+      - environment/environment_fetcher.env
+      - environment/environment_webui.env
+    networks:
+      - publisher-network
+
+networks:
+  publisher-network:
+    name: publisher_net

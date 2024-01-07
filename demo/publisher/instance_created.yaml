@@ -1,0 +1,52 @@
+publisherName: publisher-orders-created
+sourceName: publisher-postgres-source
+destinationName: publisher-kafka-destination
+serializationType: Json
+encryptionEnabled: false
+encryptionType: Aes256
+encryptionKeyName: ENC_KEY_1
+fetcherConfig:
+  useNativeDriver: true
+  fetchingThreadsNO: 3
+  queryIncrementType: DAY
+  queryIncrementValue: 3
+  initialFetchValue: 2023-12-20 00:00:00
+  dataSeparatorChar: ;
+businessObject:
+  description: Demo Archer - orders
+  objectGroup: order
+  additionalMetadata:
+    organization: Syntio
+    eventType: OrderCreated
+  definition:
+    - id
+    - order_info:
+        - created_at
+        - updated_at
+        - deleted_at
+        - is_active
+        - purchaser
+        - payment_method
+    - order_lines:
+        - product
+        - quantity
+        - price
+        - order_id
+  arrayElements:
+    - order_lines
+  groupElements:
+    - order_id
+  keyElements:
+    - id
+  idElements:
+    - id
+    - created_at
+    - order_id
+  query: SELECT orders.id AS id, orders.purchaser AS purchaser,
+    orders.payment_method AS payment_method, orders.created_at AS created_at,
+    orders.updated_at AS updated_at, orders.deleted_at AS deleted_at,
+    orders.is_active AS is_active, order_lines.product AS product,
+    order_lines.quantity AS quantity, order_lines.price AS price,
+    order_lines.order_id AS order_id FROM orders JOIN order_lines ON orders.id =
+    order_lines.order_id WHERE orders.created_at >= {{ .FetchFrom }} AND
+    orders.created_at < {{ .FetchTo }};

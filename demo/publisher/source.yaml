@@ -1,0 +1,7 @@
+sourceName: publisher-postgres-source
+sourceType: Postgres
+host: orders-db
+port: 5432
+databaseName: orders
+username: postgres
+password: postgres
