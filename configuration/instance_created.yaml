@@ -3,20 +3,15 @@ sourceName: publisher-postgres-source
 destinationName: publisher-kafka-destination
 serializationType: Json
 encryptionEnabled: false
-encryptionType: Aes256
-encryptionKeyName: ENC_KEY_1
 fetcherConfig:
   useNativeDriver: true
-  fetchingThreadsNO: 3
-  queryIncrementType: DAY
-  queryIncrementValue: 3
-  initialFetchValue: 2023-12-20 00:00:00
-  dataSeparatorChar: ;
+  fetchingThreadsNO: 1
+  queryIncrementType: MINUTE
+  queryIncrementValue: 1
 businessObject:
-  description: Demo Archer - orders
+  description: Publisher - Transactional Outbox
   objectGroup: order
   additionalMetadata:
-    organization: Syntio
     eventType: OrderCreated
   definition:
     - id

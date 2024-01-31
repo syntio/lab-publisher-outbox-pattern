@@ -1,8 +1,8 @@
 version: "3.9"
 services:
-  publisher-worker:
+  publisher-worker-orders-deleted:
     image: syntioinc/dataphos-publisher-worker:v1.1.0
-    container_name: publisher-orders
+    container_name: publisher-worker-orders-deleted
     command: [ "publisher-orders-updated" ]
     networks:
       - publisher-network
@@ -14,3 +14,4 @@ services:
 networks:
   publisher-network:
     name: publisher_net
+    external: true

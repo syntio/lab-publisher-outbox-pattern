@@ -9,6 +9,7 @@ services:
       - publisher-network
     environment:
       - ALLOW_ANONYMOUS_LOGIN=yes
+      - TZ=Europe/Zagreb
     volumes:
       - "zookeeper_data:/bitnami"
 
@@ -28,13 +29,14 @@ services:
       - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092,EXTERNAL://localhost:9094
       - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,EXTERNAL:PLAINTEXT,PLAINTEXT:PLAINTEXT
       - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=true
+      - TZ=Europe/Zagreb
     volumes:
       - "kafka_data:/bitnami"
     depends_on:
       - zookeeper
 
   console:
-    image: docker.redpanda.com/vectorized/console:latest
+    image: docker.redpanda.com/redpandadata/console:v2.3.3
     container_name: console
     ports:
       - "8082:8080"

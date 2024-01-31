@@ -1,14 +1,14 @@
-package syntio.publisher.outbox.demo.service;
+package syntio.orders.demo.service;
 
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
-import syntio.publisher.outbox.demo.model.Order;
-import syntio.publisher.outbox.demo.model.OrderLine;
-import syntio.publisher.outbox.demo.repository.OrderLineRepository;
-import syntio.publisher.outbox.demo.repository.OrderRepository;
+import syntio.orders.demo.model.Order;
+import syntio.orders.demo.repository.OrderLineRepository;
+import syntio.orders.demo.repository.OrderRepository;
+import syntio.orders.demo.model.OrderLine;
 
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;

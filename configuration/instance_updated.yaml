@@ -1,23 +1,18 @@
-publisherName: publisher-orders-deleted
+publisherName: publisher-orders-updated
 sourceName: publisher-postgres-source
 destinationName: publisher-kafka-destination
 serializationType: Json
 encryptionEnabled: false
-encryptionType: Aes256
-encryptionKeyName: ENC_KEY_1
 fetcherConfig:
   useNativeDriver: true
   fetchingThreadsNO: 3
-  queryIncrementType: DAY
-  queryIncrementValue: 3
-  initialFetchValue: 2023-12-20 00:00:00
-  dataSeparatorChar: ;
+  queryIncrementType: MINUTE
+  queryIncrementValue: 1
 businessObject:
-  description: Demo Archer - orders
+  description: Publisher - Transactional Outbox
   objectGroup: order
   additionalMetadata:
-    organization: Syntio
-    eventType: OrderDeleted
+    eventType: OrderUpdated
   definition:
     - id
     - order_info:
@@ -40,7 +35,7 @@ businessObject:
     - id
   idElements:
     - id
-    - deleted_at
+    - updated_at
     - order_id
   query: SELECT orders.id AS id, orders.purchaser AS purchaser,
     orders.payment_method AS payment_method, orders.created_at AS created_at,
@@ -48,5 +43,5 @@ businessObject:
     orders.is_active AS is_active, order_lines.product AS product,
     order_lines.quantity AS quantity, order_lines.price AS price,
     order_lines.order_id AS order_id FROM orders JOIN order_lines ON orders.id =
-    order_lines.order_id WHERE orders.deleted_at >= {{ .FetchFrom }} AND
-    orders.deleted_at < {{ .FetchTo }};
+    order_lines.order_id WHERE orders.updated_at >= {{ .FetchFrom }} AND
+    orders.updated_at < {{ .FetchTo }};

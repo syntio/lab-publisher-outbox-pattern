@@ -1,4 +1,4 @@
-package syntio.publisher.outbox.demo.controller;
+package syntio.orders.demo.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -7,15 +7,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-import syntio.publisher.outbox.demo.model.Order;
-import syntio.publisher.outbox.demo.repository.OrderRepository;
-import syntio.publisher.outbox.demo.service.OrderService;
+import syntio.orders.demo.model.Order;
+import syntio.orders.demo.repository.OrderRepository;
+import syntio.orders.demo.service.OrderService;
 
 import java.util.List;
 import java.util.Optional;
 
 
-@CrossOrigin(origins = "http://localhost:8081")
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api")
 public class OrderController {

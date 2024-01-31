@@ -1,6 +1,6 @@
 version: "3.9"
 services:
-  publisher-worker:
+  publisher-worker-orders-created:
     image: syntioinc/dataphos-publisher-worker:v1.1.0
     container_name: publisher-orders
     command: [ "publisher-orders-created" ]
@@ -14,3 +14,4 @@ services:
 networks:
   publisher-network:
     name: publisher_net
+    external: true

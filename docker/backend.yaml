@@ -18,6 +18,19 @@ services:
     volumes:
       - orders-db:/var/lib/postgresql/data
 
+  orders-app:
+    image: orders-demo-app:latest
+    container_name: orders-app
+    restart: unless-stopped
+    networks:
+      - publisher-network
+    environment:
+      - TZ=Europe/Zagreb
+    ports:
+      - "8089:8089"
+    depends_on:
+      - orders-db
+
 networks:
   publisher-network:
     name: publisher_net
@@ -25,4 +38,3 @@ networks:
 volumes:
   orders-db:
     driver: local
-  

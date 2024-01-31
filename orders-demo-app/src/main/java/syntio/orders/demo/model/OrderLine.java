@@ -1,4 +1,4 @@
-package syntio.publisher.outbox.demo.model;
+package syntio.orders.demo.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;

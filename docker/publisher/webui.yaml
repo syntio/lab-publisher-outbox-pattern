@@ -14,9 +14,12 @@ services:
       - environment/environment_postgres.env
       - environment/environment_fetcher.env
       - environment/environment_webui.env
+    depends_on:
+      - publisher-manager
     networks:
       - publisher-network
 
 networks:
   publisher-network:
     name: publisher_net
+    external: true

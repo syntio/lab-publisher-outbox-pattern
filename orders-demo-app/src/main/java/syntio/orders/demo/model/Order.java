@@ -1,4 +1,4 @@
-package syntio.publisher.outbox.demo.model;
+package syntio.orders.demo.model;
 
 import jakarta.persistence.*;
 

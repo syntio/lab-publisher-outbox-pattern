@@ -1,13 +1,13 @@
-package syntio.publisher.outbox.demo;
+package syntio.orders.demo;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class PublisherOutboxApplication {
+public class OrdersDemoApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(PublisherOutboxApplication.class, args);
+        SpringApplication.run(OrdersDemoApplication.class, args);
     }
 
 }
