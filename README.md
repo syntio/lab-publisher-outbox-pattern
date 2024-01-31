@@ -65,8 +65,11 @@ The Dataphos Publisher deployment is split into multiple files, and it needs to 
   On the Web UI open the `Web CLI` tab and drag-and-drop the [configuration](/configuration) files. First the
   [source](/configuration/source.yaml), then the [destination](configuration/destination.yaml), and finaly the three
   instances.
-- After the instances are added, run `docker-compose -f <name of the worker.yaml file> up -d` to start the Worker
-  component. That is, to start the data ingestion jobs.
+- After the instances are added, run the following commands to start the Worker components. That is, to start the 
+  data ingestion jobs.
+  ```yaml
+  docker-compose -f <name of the worker.yaml file> up -d
+  ```
 
 ### Demonstration
 
