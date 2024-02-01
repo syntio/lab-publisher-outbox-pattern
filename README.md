@@ -18,6 +18,8 @@ The Dataphos Publisher is a tool that ingests data from a database and creates b
 Meaning, we could skip the outbox table in this process and use the Publisher in real-time to track changes, form
 domain events according to an event type and publish these events in order to Kafka.
 
+More information about the Dataphos Data Platform, including Dataphos Publisher, can be found [here](https://docs.dataphos.com/).
+
 ### Workflow
 
 For this purpose, a Spring application was created with routes for standard CRUD operations for Orders.
@@ -44,7 +46,7 @@ The Orders application contains a Dockerfile that should be used to build a Dock
 - Position yourself in the [docker](/docker) directory.
 - Run the following command.
   ```yaml
-  docker compose -f ./broker.yaml ./backend.yaml up -d
+  docker compose -f ./broker.yaml -f ./backend.yaml up -d
   ```
   This will start Apache Kafka and the Redpanda Console that can be used for monitoring. The Redpanda console is
   available at `http://localhost:8082`. This command will also start the Orders application and its PostgreSQL database.
@@ -61,8 +63,9 @@ The Dataphos Publisher deployment is split into multiple files, and it needs to 
   This will deploy the Publisher's infrastructure components and it's Web UI used for configuration management and
   monitoring.
 - Source, destination and then instances can now be added using the Web UI which can be accessed on
- `http://localhost:8085`. The instances must be added **after** the source and the destination. 
-  On the Web UI open the `Web CLI` tab and drag-and-drop the [configuration](/configuration) files. First the
+ `http://localhost:8085`. The default username and password are `publisher_admin` and `Adm!n`.
+  The instances must be added **after** the source and the destination. 
+  On the Web UI open the `WebCLI` tab and drag-and-drop the [configuration](/configuration) files. First the
   [source](/configuration/source.yaml), then the [destination](configuration/destination.yaml), and finaly the three
   instances.
 - After the instances are added, run the following commands to start the Worker components. That is, to start the 
@@ -105,20 +108,13 @@ Send the following JSON body using a `PUT` request to the PUT endpoint for the p
 
 ```json
 {
-  "orderId": 1,
-  "purchaser": "Tea",
-  "paymentMethod": "cash",
+  "purchaser": "Leon",
+  "paymentMethod": "card",
   "orderLines": [
-    {
-      "id": 1,
-      "product": "jacket",
-      "quantity": 2,
-      "price": 80.00
-    },
     {
       "id": 2,
       "product": "sneakers",
-      "quantity": 1,
+      "quantity": 5,
       "price": 70.00
     }
   ]

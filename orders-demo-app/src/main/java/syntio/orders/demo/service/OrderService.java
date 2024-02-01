@@ -25,7 +25,7 @@ public class OrderService {
     @Autowired
     private OrderLineRepository orderLineRepository;
 
-    public void createOrder(Order order) {
+    public Order createOrder(Order order) {
         // Get the current date and time in UTC
         OffsetDateTime now = OffsetDateTime.now(ZoneOffset.UTC);
         // Adjust the offset to be one hour earlier
@@ -35,6 +35,7 @@ public class OrderService {
         order.setUpdatedAt(null);
         order.setDeletedAt(null);
         order.setIsActive(true);
+
         List<OrderLine> orderLines = order.getOrderLines();
         orderLines.forEach(orderLine -> {
             orderLine.setCreatedAt(adjustedTime);
@@ -43,19 +44,19 @@ public class OrderService {
             orderLine.setIsActive(true);
             orderLine.setOrder(order);
         });
-        orderRepository.save(order);
+
+        return orderRepository.save(order);
     }
 
-    public ResponseEntity<Order> updateOrder(@PathVariable("orderId") Integer id, Order updatedOrder) {
+    public Order updateOrder(@PathVariable("orderId") Integer id, Order updatedOrder) throws IllegalArgumentException {
         // Get the current date and time in UTC
         OffsetDateTime now = OffsetDateTime.now(ZoneOffset.UTC);
         // Adjust the offset to be one hour earlier
         OffsetDateTime adjustedTime = now.minusHours(1);
 
         Order existingOrderOptional = orderRepository.findById(id).orElse(null);
-
         if (existingOrderOptional == null) {
-            return ResponseEntity.notFound().build();
+            throw new IllegalArgumentException(String.format("Order with id %d does not exist", id));
         }
 
         existingOrderOptional.setUpdatedAt(adjustedTime);
@@ -63,42 +64,52 @@ public class OrderService {
         existingOrderOptional.setPaymentMethod(updatedOrder.getPaymentMethod());
 
         List<OrderLine> updatedOrderLines = new ArrayList<>();
+
         for (OrderLine lineUpdateRequest : updatedOrder.getOrderLines()) {
             OrderLine existingLine = orderLineRepository.findOrderLineById(lineUpdateRequest.getId());
-            if (existingLine != null) {
-                existingLine.setProduct(lineUpdateRequest.getProduct());
-                existingLine.setQuantity(lineUpdateRequest.getQuantity());
-                existingLine.setPrice(lineUpdateRequest.getPrice());
-                existingLine.setUpdatedAt(adjustedTime);
-                updatedOrderLines.add(existingLine);
+            if (existingLine == null) {
+                continue;
             }
+
+            if (lineUpdateRequest.getProduct() != null) {
+                existingLine.setProduct(lineUpdateRequest.getProduct());
+            }
+            if (lineUpdateRequest.getQuantity() != null) {
+                existingLine.setQuantity(lineUpdateRequest.getQuantity());
+            }
+            existingLine.setPrice(lineUpdateRequest.getPrice());
+            existingLine.setUpdatedAt(adjustedTime);
+            updatedOrderLines.add(existingLine);
         }
 
         existingOrderOptional.setOrderLines(updatedOrderLines);
-        Order newOrder = orderRepository.save(existingOrderOptional);
-        return ResponseEntity.ok(newOrder);
 
+        return orderRepository.save(existingOrderOptional);
     }
 
-    public void deleteById(Integer id) {
+    public void deleteById(Integer id) throws IllegalArgumentException {
         // Get the current date and time in UTC
         OffsetDateTime now = OffsetDateTime.now(ZoneOffset.UTC);
         // Adjust the offset to be one hour earlier
         OffsetDateTime adjustedTime = now.minusHours(1);
 
         Optional<Order> order = orderRepository.findById(id);
-        if (order.isPresent()) {
-            Order existingOrder = order.get();
-            existingOrder.setIsActive(false);
-            existingOrder.setDeletedAt(adjustedTime);
-            List<OrderLine> orderLines = existingOrder.getOrderLines();
-            orderLines.forEach(orderLine -> {
-                orderLine.setIsActive(false);
-                orderLine.setDeletedAt(adjustedTime);
-                orderLine.setOrder(existingOrder);
-            });
-            orderRepository.save(existingOrder);
+        if (order.isEmpty()) {
+            throw new IllegalArgumentException(String.format("Order with id %d doesn't exist", id));
         }
+
+        Order existingOrder = order.get();
+        existingOrder.setIsActive(false);
+        existingOrder.setDeletedAt(adjustedTime);
+
+        List<OrderLine> orderLines = existingOrder.getOrderLines();
+        orderLines.forEach(orderLine -> {
+            orderLine.setIsActive(false);
+            orderLine.setDeletedAt(adjustedTime);
+            orderLine.setOrder(existingOrder);
+        });
+
+        orderRepository.save(existingOrder);
     }
 
 }

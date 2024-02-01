@@ -6,7 +6,12 @@ import jakarta.persistence.*;
 import java.time.OffsetDateTime;
 
 @Entity
-@Table(name = "order_lines")
+@Table(name = "order_lines", indexes = {
+        @Index(name = "idx_order_lines_created_at", columnList = "created_at"),
+        @Index(name = "idx_order_lines_updated_at", columnList = "updated_at"),
+        @Index(name = "idx_order_lines_deleted_at", columnList = "deleted_at"),
+        @Index(name = "idx_order_lines_order_id", columnList = "order_id")
+})
 public class OrderLine {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -2,7 +2,7 @@ version: "3.9"
 services:
   publisher-worker-orders-created:
     image: syntioinc/dataphos-publisher-worker:v1.1.0
-    container_name: publisher-orders
+    container_name: publisher-worker-orders-created
     command: [ "publisher-orders-created" ]
     networks:
       - publisher-network
